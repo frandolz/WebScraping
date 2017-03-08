@@ -12,23 +12,32 @@ from bs4 import BeautifulSoup
 
 
 class Cliente(object):
+    """
+    Sobre la pagina web https://www.packtpub.com/packt/offers/free-learning/
+    busca el titulo de libro gratuito del día y lo muestra.
+    """
     def get_web(self,page):
-        """ bajarse la web """
+        """ 
+        Baja la web obteniendo su codigo html 
+        """
         f = urllib2.urlopen(page)
         html = f.read()
         f.close()
         return html
 
     def search_text(self, html):
-    	#buscar el titulo
+    	"""
+        Parsea y busca el titulo deseado 
+        """
         soup = BeautifulSoup(html, 'html.parser')      
-        title = soup.find_all("div", "dotd-title")
-        return title
+        title = soup.find("div", "dotd-title")
+        book = title.find("h2").text    
+        return book.strip() if book else "Error"
 
     def main(self):
         web = self.get_web("https://www.packtpub.com/packt/offers/free-learning/")
         result = self.search_text(web)
-        #Imprimir resultado
+        #Imprime resultado
         print result
 
 if __name__== "__main__":
